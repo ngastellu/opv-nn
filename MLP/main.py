@@ -14,8 +14,8 @@ def get_config():
 
     # Data and logging
     parser.add_argument('--experiment_name', type=str)
-    parser.add_argument('--train_file', type=str, required=True)
-    parser.add_argument('--pce_file', type=str, required=True)
+    parser.add_argument('--ecfp4_npy', type=str, default='data/ecfp4.npy')
+    parser.add_argument('--pce_npy', type=str, default='data/pces.npy')
 
     # Model hyperparameters
     parser.add_argument('--input_dim', type=int, default=2048)
