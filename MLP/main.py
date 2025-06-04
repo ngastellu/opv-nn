@@ -62,6 +62,12 @@ def setup_training(configs, Xtr, ytr, Xte, yte, model):
     optimizer = torch.optim.Adam(model.parameters(), lr=configs.learning_rate, weight_decay=configs.weight_decay)
     loss_func = Loss(configs)
 
+    # convert everything to torch data types
+    Xtr = torch.from_numpy(Xtr).float()
+    ytr = torch.from_numpy(ytr).float()
+    Xte = torch.from_numpy(Xte).float()
+    ytr = torch.from_numpy(ytr).float()
+
     train_dataset = TensorDataset(Xtr, ytr)
     train_loader = DataLoader(train_dataset, batch_size=configs.tr_batch_size, shuffle=True)
     
