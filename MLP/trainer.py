@@ -45,8 +45,17 @@ def train_model(configs, model, train_loader, test_loader, optimizer, loss_func,
     
     stopped_early = False
     for epoch in range(iepoch, configs.max_epochs):
+        print(f'\n*** {epoch}***\nTraining...', end=' ', flush=True)
+        start = perf_counter()
         tr_loss, tr_time = model_epoch(model, train_loader, optimizer, loss_func, device, update_gradients=True)
+        end = perf_counter()
+        print(f'Done! [{end-start} seconds]', flush=True)
+
+        print(f'Testing...', end=' ',flush=True)
+        start = perf_counter()
         te_loss, te_time = model_epoch(model, test_loader, optimizer, loss_func, device, update_gradients=False)
+        end = perf_counter()
+        print(f'Done! [{end-start} seconds]', flush=True)
 
         fo.write(f'{epoch}\t{tr_loss:.4f}\t{tr_time:.2f}\t{te_loss:.4f}\t{te_time:.2f}\n')
 
@@ -57,7 +66,7 @@ def train_model(configs, model, train_loader, test_loader, optimizer, loss_func,
             'optimizer_state_dict': optimizer.state_dict(),
             'tr_loss': tr_loss,
             'te_loss': te_loss
-        }, Path / f'checkpoint-{epoch}.pth')
+        }, rundir / f'checkpoint-{epoch}.pth')
 
         if stopper(te_loss, model):
             print(f'Stopping early at epoch {epoch}.')
@@ -73,7 +82,7 @@ def train_model(configs, model, train_loader, test_loader, optimizer, loss_func,
         'optimizer_state_dict': optimizer.state_dict(),
         'tr_loss': tr_loss,
         'te_loss': te_loss
-        }, Path / f'final_save.pth')
+        }, rundir / f'final_save.pth')
 
     
 
