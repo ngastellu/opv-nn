@@ -1,5 +1,6 @@
 import json
 from pathlib import Path
+from time import perf_counter
 import argparse
 import torch
 from torch.utils.data import TensorDataset, DataLoader
@@ -76,10 +77,24 @@ def setup_training(configs, Xtr, ytr, Xte, yte, model):
     return optimizer, loss_func, train_loader, test_loader 
 
 def main(configs):
+    print('Initialising model...', end=' ', flush=True)
+    start = perf_counter()
     model, device  = init_model(configs)
-
+    end = perf_counter()
+    print(f'Done! [{end-start} seconds]', flush=True)
+    
+    print('Preparing data...', end=' ', flush=True)
     Xtr, ytr, Xte, yte = prepare_data(configs.ecfp4_npy, configs.pce_npy)
+    end = perf_counter()
+    print(f'Done! [{end-start} seconds]', flush=True)
+
+    print('Defining training/sets and setting optimiser...', end=' ', flush=True)
+    start = perf_counter()
     optimizer, loss_func, train_loader, test_loader = setup_training(configs, Xtr, ytr, Xte, yte, model)
+    end = perf_counter()
+    print(f'Done! [{end-start} seconds]', flush=True)
+
+    print('\n---------- START OF TRAINING ----------')
     train_model(configs, model, train_loader, test_loader, optimizer, loss_func, device)
 
 
